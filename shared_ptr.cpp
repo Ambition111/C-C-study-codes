@@ -13,7 +13,7 @@ using namespace std;
 struct listNode
 {
 	int data;
-	std::weak_ptr<listNode> prev;//Ê¹ÓÃweak_ptrÊÇÒòÎªËü²»»áÔö¼ÓprevºÍnextµÄÒıÓÃ¼ÆÊı£¬±ÜÃâÔì³ÉÑ­»·ÒıÓÃ
+	std::weak_ptr<listNode> prev;//ä½¿ç”¨weak_ptræ˜¯å› ä¸ºå®ƒä¸ä¼šå¢åŠ prevå’Œnextçš„å¼•ç”¨è®¡æ•°ï¼Œé¿å…é€ æˆå¾ªç¯å¼•ç”¨
 	std::weak_ptr<listNode> next;
 
 	listNode(int d = 0) : data(d)
@@ -26,7 +26,7 @@ struct listNode
 	}
 };
 
-//¶¨ÖÆÉ¾³ıÆ÷
+//å®šåˆ¶åˆ é™¤å™¨
 void Del(listNode* pn)
 {
 	cout << "Delete pn" << endl;
@@ -38,7 +38,7 @@ int main()
 	
 	//boost::shared_array<listNode> spa(pa);  //OK
 
-	//C++11¿âÀïÃ»ÓĞËùÎ½µÄshared_array,µ«boost¿âÀïÓĞ£¬µ«ÈôÈÔÏëÀûÓÃstd::shared_ptr¹ÜÀíÊı×é¿Õ¼ä£¬ÔòĞèÒª¶¨ÖÆÉ¾³ıÆ÷£¬ÆäÊµ¾ÍÊÇÉ¾³ıº¯Êı
+	//C++11åº“é‡Œæ²¡æœ‰æ‰€è°“çš„shared_array,ä½†booståº“é‡Œæœ‰ï¼Œä½†è‹¥ä»æƒ³åˆ©ç”¨std::shared_ptrç®¡ç†æ•°ç»„ç©ºé—´ï¼Œåˆ™éœ€è¦å®šåˆ¶åˆ é™¤å™¨ï¼Œå…¶å®å°±æ˜¯åˆ é™¤å‡½æ•°
 	//std::shared_ptr<listNode> spa(pa);	  //error
 	std::shared_ptr<listNode> spa(pa,Del);	  //OK
 
@@ -47,7 +47,7 @@ int main()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
-//Ä£ÄâÊµÏÖshared_ptr
+//æ¨¡æ‹Ÿå®ç°shared_ptr
 template<class T>
 class my_shared_ptr
 {
@@ -56,13 +56,13 @@ public:
 	{}
 	my_shared_ptr(const my_shared_ptr<T>& p) : _Ptr(p._Ptr), _UseCount(p._UseCount), _Mutex(p._Mutex)
 	{
-		Increment();//Ôö¼ÓÒıÓÃ¼ÆÊı
+		Increment();//å¢åŠ å¼•ç”¨è®¡æ•°
 	}
 	my_shared_ptr<T>& operator=(const my_shared_ptr<T>& p)
 	{
 		if (this != &p)
 		{
-			//ÊÍ·Å×ÊÔ´
+			//é‡Šæ”¾èµ„æº
 			Decrement();
 			_Ptr = p._Ptr;
 			_UseCount = p._UseCount;
@@ -72,7 +72,7 @@ public:
 	}
 	~my_shared_ptr()
 	{
-		Decrement();//¼õÉÙÒıÓÃ¼ÆÊı
+		Decrement();//å‡å°‘å¼•ç”¨è®¡æ•°
 	}
 public:
 	T& operator*() const
@@ -103,7 +103,7 @@ public:
 	void Increment() 
 	{
 		_Mutex->lock();
-		++*_UseCount;		//ÁÙ½çÇø
+		++*_UseCount;		//ä¸´ç•ŒåŒº
 		_Mutex->unlock();
 	}
 	void Decrement() 
@@ -121,9 +121,9 @@ public:
 			delete _Mutex;
 	}
 private:
-	T* _Ptr;			//ÒıÓÃ¼ÆÊı
-	size_t* _UseCount;	//Ö¸Ïò¹ÜÀí×ÊÔ´µÄÖ¸Õë
-	mutex* _Mutex;		//»¥³âÁ¿,±£Ö¤Ïß³Ì°²È«
+	T* _Ptr;		//æŒ‡å‘ç®¡ç†èµ„æºçš„æŒ‡é’ˆ	
+	size_t* _UseCount;	//å¼•ç”¨è®¡æ•°
+	mutex* _Mutex;		//äº’æ–¥é‡,ä¿è¯çº¿ç¨‹å®‰å…¨
 };
 
 void thread_fun(my_shared_ptr<int>& sp, int n)
@@ -181,37 +181,37 @@ int main()
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-int main()  //shared_ptrµÄ¼òµ¥Ê¹ÓÃ
+int main()  //shared_ptrçš„ç®€å•ä½¿ç”¨
 {
-	//Ã¿¶àÒ»¸ö¶ÔÏóÖ¸Ïòp¿Õ¼ä£¬ÒıÓÃ¼ÆÊı¾Í¼ÓÒ»£¬¶ÔÏóÎö¹¹ÔòÒıÓÃ¼ÆÊı¼õÒ»¡£ÒıÓÃ¼ÆÊıÎª0Ê±²ÅÔÊĞíÊÍ·Åp¿Õ¼ä
+	//æ¯å¤šä¸€ä¸ªå¯¹è±¡æŒ‡å‘pç©ºé—´ï¼Œå¼•ç”¨è®¡æ•°å°±åŠ ä¸€ï¼Œå¯¹è±¡ææ„åˆ™å¼•ç”¨è®¡æ•°å‡ä¸€ã€‚å¼•ç”¨è®¡æ•°ä¸º0æ—¶æ‰å…è®¸é‡Šæ”¾pç©ºé—´
 	int* p = new int(10);
 
-	//shared_ptr ¹²ÏíÖÇÄÜÖ¸Õë£¬Ò²½ĞÒıÓÃ¼ÆÊıĞÍÖÇÄÜÖ¸Õë
+	//shared_ptr å…±äº«æ™ºèƒ½æŒ‡é’ˆï¼Œä¹Ÿå«å¼•ç”¨è®¡æ•°å‹æ™ºèƒ½æŒ‡é’ˆ
 	std::shared_ptr<int> sp;
 	//cout << "*sp = " << *sp << endl;
 	cout << "use_count = " << sp.use_count() << endl;
 
-	//std::shared_ptr<int> sp1 = sp;  //ÔÊĞí¿½±´¹¹Ôì
+	//std::shared_ptr<int> sp1 = sp;  //å…è®¸æ‹·è´æ„é€ 
 	//cout << "use_count = " << sp1.use_count() << endl;
 
 	//std::shared_ptr<int> sp2;
-	//sp2 = sp1;                      //ÔÊĞí¸³Öµ
+	//sp2 = sp1;                      //å…è®¸èµ‹å€¼
 	//cout << "use_count = " << sp2.use_count() << endl;
 
-	sp.reset(p);  //ÖØĞÂÉèÖÃ
+	sp.reset(p);  //é‡æ–°è®¾ç½®
 	cout << "*sp = " << *sp << endl;
 	cout << "use_count = " << sp.use_count() << endl;
 
-	if (sp.unique())  //ÅĞ¶ÏspÊÇ·ñÊÇÎ¨Ò»¹ÜÀíp¿Õ¼äµÄÖÇÄÜÖ¸Õë
+	if (sp.unique())  //åˆ¤æ–­spæ˜¯å¦æ˜¯å”¯ä¸€ç®¡ç†pç©ºé—´çš„æ™ºèƒ½æŒ‡é’ˆ
 		cout << "is unique." << endl;
 	else
 		cout << "is not unique." << endl;
 
-	//weak_ptr(ÈõÖ¸Õë)ÊÇÎªÅäºÏshared_ptr¶øÒıÈëµÄÒ»ÖÖÖÇÄÜÖ¸Õë£¬Ëü¸üÏñÊÇshared_ptrµÄÒ»¸öÖúÊÖ¶ø²»ÊÇÖÇÄÜÖ¸Õë£¬
-	//ÒòÎªËü²»¾ßÓĞÆÕÍ¨Ö¸ÕëµÄĞĞÎª£¬Ã»ÓĞÖØÔØoperator*ºÍ->
-	//ËüµÄ×î´ó×÷ÓÃÔÚÓÚĞ­Öúshared_ptr¹¤×÷£¬ÏñÅÔ¹ÛÕßÄÇÑù¹Û²â×ÊÔ´µÄÊ¹ÓÃÇé¿ö¡£
+	//weak_ptr(å¼±æŒ‡é’ˆ)æ˜¯ä¸ºé…åˆshared_ptrè€Œå¼•å…¥çš„ä¸€ç§æ™ºèƒ½æŒ‡é’ˆï¼Œå®ƒæ›´åƒæ˜¯shared_ptrçš„ä¸€ä¸ªåŠ©æ‰‹è€Œä¸æ˜¯æ™ºèƒ½æŒ‡é’ˆï¼Œ
+	//å› ä¸ºå®ƒä¸å…·æœ‰æ™®é€šæŒ‡é’ˆçš„è¡Œä¸ºï¼Œæ²¡æœ‰é‡è½½operator*å’Œ->
+	//å®ƒçš„æœ€å¤§ä½œç”¨åœ¨äºååŠ©shared_ptrå·¥ä½œï¼Œåƒæ—è§‚è€…é‚£æ ·è§‚æµ‹èµ„æºçš„ä½¿ç”¨æƒ…å†µã€‚
 	std::weak_ptr<int> wp = sp;
-	cout << "use_count = " << sp.use_count() << endl;  //ÒıÓÃ¼ÆÊı²»»á¼ÓÒ»
+	cout << "use_count = " << sp.use_count() << endl;  //å¼•ç”¨è®¡æ•°ä¸ä¼šåŠ ä¸€
 	cout << "wp_use_count = " << wp.use_count() << endl;
 
 	return 0;
